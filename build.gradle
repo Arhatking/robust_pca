@@ -1,0 +1,39 @@
+group 'robust_pca'
+//version '1.0'
+
+apply plugin: 'scala'
+apply plugin: 'application'
+
+def scalaVersion = '2.13.0'
+def scalaRelease = scalaVersion.split('\\.').take(2).join('.')
+tasks.withType(ScalaCompile){
+	scalaCompileOptions.with {force = true}
+	scalaCompileOptions.additionalParameters = ["-feature"]
+}
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	implementation "org.scala-lang:scala-library:$scalaVersion"
+	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+	compile group: 'org.ojalgo', name: 'ojalgo', version: '47.2.0'
+}
+
+task uberJar(type: Jar) {
+	manifest {
+		attributes	'Implementation-Title': 'Rpca Library',
+//					'Implementation-Version': version,
+//					'Built-By': System.getProperty('user.name'),
+			'Built-Date': new Date().format('yyyy-MM-dd HH:mm:ss'),
+			'Java-JDK': System.getProperty('java.version'),
+			'Java-Vendor': System.getProperty('java.vm.vendor'),
+			'Scala-SDK': scalaVersion
+	}
+//	eachFile { it.duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+	archiveClassifier = ''
+	from sourceSets.main.output
+	dependsOn configurations.runtimeClasspath
+	from (configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }){}
+}
