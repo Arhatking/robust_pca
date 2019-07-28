@@ -1,6 +1,6 @@
 # Robust Principal Component Analysis
-
-This is a port to Scala from https://github.com/Netflix/Surus
+This project uses an rpca algorithm to perform anomaly detection on a kafka topic.  
+The algorithm used is from https://github.com/Netflix/Surus
 
 
 
